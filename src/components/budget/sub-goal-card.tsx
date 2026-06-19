@@ -16,8 +16,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreVertical, Edit2, Trash2, CheckCircle2, Circle } from "lucide-react";
+import { MoreVertical, Edit2, Trash2, CheckCircle2, Circle, PlusCircle } from "lucide-react";
 import { toast } from "sonner";
+import { AddMoneyModal } from "./add-money-modal";
 
 interface SubGoalCardProps {
   subGoal: SubGoalSerialized;
@@ -27,6 +28,7 @@ interface SubGoalCardProps {
 export function SubGoalCard({ subGoal, goalId }: SubGoalCardProps) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isAddMoneyOpen, setIsAddMoneyOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { deleteSubGoal } = useFinanceStore();
 
@@ -98,11 +100,24 @@ export function SubGoalCard({ subGoal, goalId }: SubGoalCardProps) {
               className="h-1.5" 
               indicatorClassName={isCompleted ? "bg-green-500" : "bg-primary"}
             />
-            {isCompleted && (
-              <p className="text-[10px] text-green-600 dark:text-green-500 text-right mt-1">
-                Milestone Reached!
-              </p>
-            )}
+            <div className="flex justify-between items-center mt-2 pt-2 border-t border-border/50">
+              {isCompleted ? (
+                <p className="text-[10px] text-green-600 dark:text-green-500 font-medium">
+                  Milestone Reached!
+                </p>
+              ) : (
+                <span />
+              )}
+              <Button
+                onClick={() => setIsAddMoneyOpen(true)}
+                variant="ghost"
+                size="sm"
+                className="h-6 text-[10px] gap-1 px-2 text-primary hover:bg-primary/10 transition-colors cursor-pointer"
+              >
+                <PlusCircle className="h-3 w-3" />
+                Add Money
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -112,6 +127,12 @@ export function SubGoalCard({ subGoal, goalId }: SubGoalCardProps) {
         open={isEditDialogOpen}
         onOpenChange={setIsEditDialogOpen}
         initialData={subGoal}
+      />
+
+      <AddMoneyModal
+        open={isAddMoneyOpen}
+        onOpenChange={setIsAddMoneyOpen}
+        subGoal={subGoal}
       />
 
       <ConfirmationDialog

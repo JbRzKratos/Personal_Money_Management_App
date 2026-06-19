@@ -17,9 +17,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Target, MoreVertical, Edit2, Trash2, ArrowRight, CalendarIcon } from "lucide-react";
+import { Target, MoreVertical, Edit2, Trash2, ArrowRight, CalendarIcon, PlusCircle } from "lucide-react";
 import { toast } from "sonner";
 import { format, differenceInDays } from "date-fns";
+import { AddMoneyModal } from "./add-money-modal";
 
 interface GoalCardProps {
   goal: SavingsGoalSerialized;
@@ -28,6 +29,7 @@ interface GoalCardProps {
 export function GoalCard({ goal }: GoalCardProps) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isAddMoneyOpen, setIsAddMoneyOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { deleteGoal } = useFinanceStore();
 
@@ -134,12 +136,23 @@ export function GoalCard({ goal }: GoalCardProps) {
             <p className="text-[10px] text-muted-foreground">
               {goal.subGoalsCount} Sub-goals
             </p>
-            <Link href={`/budget/${goal.id}`}>
-              <Button variant="ghost" size="sm" className="h-7 text-xs gap-1 px-2 hover:bg-primary/10 hover:text-primary transition-colors">
-                Manage
-                <ArrowRight className="h-3 w-3" />
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={() => setIsAddMoneyOpen(true)}
+                variant="outline"
+                size="sm"
+                className="h-7 text-xs gap-1 px-2.5 border-primary/20 hover:border-primary text-primary hover:bg-primary/5 transition-all cursor-pointer"
+              >
+                <PlusCircle className="h-3 w-3" />
+                Add Money
               </Button>
-            </Link>
+              <Link href={`/budget/${goal.id}`}>
+                <Button variant="ghost" size="sm" className="h-7 text-xs gap-1 px-2 hover:bg-primary/10 hover:text-primary transition-colors">
+                  Manage
+                  <ArrowRight className="h-3 w-3" />
+                </Button>
+              </Link>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -148,6 +161,12 @@ export function GoalCard({ goal }: GoalCardProps) {
         open={isEditDialogOpen}
         onOpenChange={setIsEditDialogOpen}
         initialData={goal}
+      />
+
+      <AddMoneyModal
+        open={isAddMoneyOpen}
+        onOpenChange={setIsAddMoneyOpen}
+        goal={goal}
       />
 
       <ConfirmationDialog

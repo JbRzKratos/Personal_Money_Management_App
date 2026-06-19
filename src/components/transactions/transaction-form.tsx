@@ -186,121 +186,120 @@ export function TransactionForm({
 
             {/* Income & Expense Forms */}
             {(activeTab === "INCOME" || activeTab === "EXPENSE") && (
-              <TabsContent value={activeTab}>
-                <form
-                  onSubmit={ieForm.handleSubmit(onIESubmit)}
-                  className="space-y-4"
-                >
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label>Account</Label>
-                      <Select
-                        value={selectedAccountId}
-                        onValueChange={(val) => {
-                          ieForm.setValue("accountId", val);
-                          ieForm.setValue("categoryId", ""); // Reset category
-                        }}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select account" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {accounts.map((acc) => (
-                            <SelectItem key={acc.id} value={acc.id}>
-                              {acc.accountName}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      {ieForm.formState.errors.accountId && (
-                        <p className="text-xs text-destructive">
-                          {ieForm.formState.errors.accountId.message}
-                        </p>
-                      )}
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Category</Label>
-                      <Select
-                        disabled={!selectedAccountId}
-                        value={ieForm.watch("categoryId")}
-                        onValueChange={(val) => ieForm.setValue("categoryId", val)}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {selectedAccount?.categories.map((cat) => (
-                            <SelectItem key={cat.id} value={cat.id}>
-                              {cat.categoryName}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      {ieForm.formState.errors.categoryId && (
-                        <p className="text-xs text-destructive">
-                          {ieForm.formState.errors.categoryId.message}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label>Amount</Label>
-                      <Input
-                        type="number"
-                        step="0.01"
-                        placeholder="0.00"
-                        {...ieForm.register("amount", { valueAsNumber: true })}
-                      />
-                      {ieForm.formState.errors.amount && (
-                        <p className="text-xs text-destructive">
-                          {ieForm.formState.errors.amount.message}
-                        </p>
-                      )}
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Date & Time</Label>
-                      <Controller
-                        control={ieForm.control}
-                        name="transactionDate"
-                        render={({ field }) => (
-                          <DateTimePicker
-                            value={field.value}
-                            onChange={field.onChange}
-                          />
-                        )}
-                      />
-                      {ieForm.formState.errors.transactionDate && (
-                        <p className="text-xs text-destructive">
-                          {ieForm.formState.errors.transactionDate.message}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
+              <form
+                onSubmit={ieForm.handleSubmit(onIESubmit)}
+                className="space-y-4"
+              >
+                <input type="hidden" {...ieForm.register("transactionType")} />
+                <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>Note (Optional)</Label>
-                    <Textarea
-                      placeholder="What was this for?"
-                      className="resize-none"
-                      {...ieForm.register("note")}
-                    />
-                  </div>
-
-                  <Button
-                    type="submit"
-                    className="w-full"
-                    disabled={isSubmitting}
-                    variant={activeTab === "EXPENSE" ? "destructive" : "default"}
-                  >
-                    {isSubmitting && (
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Label>Account</Label>
+                    <Select
+                      value={selectedAccountId}
+                      onValueChange={(val) => {
+                        ieForm.setValue("accountId", val);
+                        ieForm.setValue("categoryId", ""); // Reset category
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select account" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {accounts.map((acc) => (
+                          <SelectItem key={acc.id} value={acc.id}>
+                            {acc.accountName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {ieForm.formState.errors.accountId && (
+                      <p className="text-xs text-destructive">
+                        {ieForm.formState.errors.accountId.message}
+                      </p>
                     )}
-                    {activeTab === "EXPENSE" ? "Record Expense" : "Log Income"}
-                  </Button>
-                </form>
-              </TabsContent>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Category</Label>
+                    <Select
+                      disabled={!selectedAccountId}
+                      value={ieForm.watch("categoryId")}
+                      onValueChange={(val) => ieForm.setValue("categoryId", val)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {selectedAccount?.categories.map((cat) => (
+                          <SelectItem key={cat.id} value={cat.id}>
+                            {cat.categoryName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {ieForm.formState.errors.categoryId && (
+                      <p className="text-xs text-destructive">
+                        {ieForm.formState.errors.categoryId.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Amount</Label>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      placeholder="0.00"
+                      {...ieForm.register("amount", { valueAsNumber: true })}
+                    />
+                    {ieForm.formState.errors.amount && (
+                      <p className="text-xs text-destructive">
+                        {ieForm.formState.errors.amount.message}
+                      </p>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Date & Time</Label>
+                    <Controller
+                      control={ieForm.control}
+                      name="transactionDate"
+                      render={({ field }) => (
+                        <DateTimePicker
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      )}
+                    />
+                    {ieForm.formState.errors.transactionDate && (
+                      <p className="text-xs text-destructive">
+                        {ieForm.formState.errors.transactionDate.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Note (Optional)</Label>
+                  <Textarea
+                    placeholder="What was this for?"
+                    className="resize-none"
+                    {...ieForm.register("note")}
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isSubmitting}
+                  variant={activeTab === "EXPENSE" ? "destructive" : "default"}
+                >
+                  {isSubmitting && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  {activeTab === "EXPENSE" ? "Record Expense" : "Log Income"}
+                </Button>
+              </form>
             )}
 
             {/* Transfer Form */}
