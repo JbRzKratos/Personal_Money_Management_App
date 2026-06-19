@@ -1,6 +1,6 @@
 "use client";
 
-import { notFound } from "next/navigation";
+import { notFound, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/utils";
 import { CategoryCard } from "@/components/accounts/category-card";
@@ -9,34 +9,13 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Plus, Tag, Activity } from "lucide-react";
 import { ClientCategoryCreate } from "./client-category-create";
 import { useFinanceStore } from "@/stores/finance-store";
-import { use } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { CardSkeleton } from "@/components/shared/loading-skeleton";
 
-interface AccountPageProps {
-  params: Promise<{
-    accountId: string;
-  }>;
-}
-
-export default function AccountDetailPage({ params }: AccountPageProps) {
-  const { accountId } = use(params);
+function AccountDetailContent() {
+  const searchParams = useSearchParams();
+  const accountId = searchParams.get("id") || "";
   const { accounts } = useFinanceStore();
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) {
-    return (
-      <div className="space-y-6 max-w-7xl mx-auto">
-        <div className="flex flex-col gap-4 border-b border-border pb-6">
-          <CardSkeleton />
-        </div>
-      </div>
-    );
-  }
 
   const account = accounts.find(a => a.id === accountId);
 
@@ -75,7 +54,7 @@ export default function AccountDetailPage({ params }: AccountPageProps) {
             </div>
           </div>
           <div className="flex gap-2 w-full sm:w-auto">
-            <Link href={`/transactions`} className="w-full sm:w-auto">
+            <Link href={`/accounts/transactions?id=${account.id}`} className="w-full sm:w-auto">
               <Button variant="outline" className="w-full">
                 <Activity className="mr-2 h-4 w-4" />
                 View Activity
@@ -120,5 +99,35 @@ export default function AccountDetailPage({ params }: AccountPageProps) {
         )}
       </div>
     </div>
+  );
+}
+
+export default function AccountDetailPage() {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return (
+      <div className="space-y-6 max-w-7xl mx-auto">
+        <div className="flex flex-col gap-4 border-b border-border pb-6">
+          <CardSkeleton />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <Suspense fallback={
+      <div className="space-y-6 max-w-7xl mx-auto">
+        <div className="flex flex-col gap-4 border-b border-border pb-6">
+          <CardSkeleton />
+        </div>
+      </div>
+    }>
+      <AccountDetailContent />
+    </Suspense>
   );
 }

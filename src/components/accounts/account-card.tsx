@@ -98,7 +98,7 @@ export function AccountCard({ account }: AccountCardProps) {
             <p className="text-[10px] text-muted-foreground">
               Updated {formatDateTime(account.updatedAt)}
             </p>
-            <Link href={`/accounts/${account.id}`}>
+            <Link href={`/accounts/detail?id=${account.id}`}>
               <Button variant="ghost" size="sm" className="h-7 text-xs gap-1 px-2 hover:bg-primary/10 hover:text-primary transition-colors">
                 View Details
                 <ArrowRight className="h-3 w-3" />

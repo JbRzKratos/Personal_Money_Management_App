@@ -146,7 +146,7 @@ export function GoalCard({ goal }: GoalCardProps) {
                 <PlusCircle className="h-3 w-3" />
                 Add Money
               </Button>
-              <Link href={`/budget/${goal.id}`}>
+              <Link href={`/budget/detail?id=${goal.id}`}>
                 <Button variant="ghost" size="sm" className="h-7 text-xs gap-1 px-2 hover:bg-primary/10 hover:text-primary transition-colors">
                   Manage
                   <ArrowRight className="h-3 w-3" />

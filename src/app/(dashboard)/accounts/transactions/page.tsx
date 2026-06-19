@@ -8,27 +8,9 @@ import { TableSkeleton } from "@/components/shared/loading-skeleton";
 import { Pagination } from "@/components/shared/pagination";
 import { ArrowLeft } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { use, Suspense } from "react";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { useMounted, useFilteredTransactions } from "@/hooks";
-
-interface AccountTransactionsPageProps {
-  params: Promise<{
-    accountId: string;
-  }>;
-}
-
-export default function AccountTransactionsPage({ params }: AccountTransactionsPageProps) {
-  const { accountId } = use(params);
-
-  return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      <Suspense fallback={<TableSkeleton rows={10} />}>
-        <AccountTransactionsContent accountId={accountId} />
-      </Suspense>
-    </div>
-  );
-}
 
 function AccountTransactionsContent({ accountId }: { accountId: string }) {
   const isMounted = useMounted();
@@ -64,7 +46,7 @@ function AccountTransactionsContent({ accountId }: { accountId: string }) {
     <>
       <div className="flex flex-col gap-4">
         <Link
-          href={`/accounts/${accountId}`}
+          href={`/accounts/detail?id=${accountId}`}
           className="text-sm text-muted-foreground hover:text-primary flex items-center transition-colors w-fit"
         >
           <ArrowLeft className="mr-1 h-4 w-4" />
@@ -91,5 +73,22 @@ function AccountTransactionsContent({ accountId }: { accountId: string }) {
         )}
       </div>
     </>
+  );
+}
+
+function AccountTransactionsPageInner() {
+  const searchParams = useSearchParams();
+  const accountId = searchParams.get("id") || "";
+
+  return <AccountTransactionsContent accountId={accountId} />;
+}
+
+export default function AccountTransactionsPage() {
+  return (
+    <div className="space-y-6 max-w-7xl mx-auto">
+      <Suspense fallback={<TableSkeleton rows={10} />}>
+        <AccountTransactionsPageInner />
+      </Suspense>
+    </div>
   );
 }

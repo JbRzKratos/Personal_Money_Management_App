@@ -1,6 +1,6 @@
 "use client";
 
-import { notFound } from "next/navigation";
+import { notFound, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { formatCurrency, calculatePercentage } from "@/lib/utils";
 import { SubGoalCard } from "@/components/budget/sub-goal-card";
@@ -11,34 +11,13 @@ import { ArrowLeft, Plus, Target, CalendarIcon } from "lucide-react";
 import { ClientSubGoalCreate } from "./client-sub-goal-create";
 import { differenceInDays } from "date-fns";
 import { useFinanceStore } from "@/stores/finance-store";
-import { use } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { CardSkeleton } from "@/components/shared/loading-skeleton";
 
-interface GoalPageProps {
-  params: Promise<{
-    goalId: string;
-  }>;
-}
-
-export default function GoalDetailPage({ params }: GoalPageProps) {
-  const { goalId } = use(params);
+function GoalDetailContent() {
+  const searchParams = useSearchParams();
+  const goalId = searchParams.get("id") || "";
   const { goals } = useFinanceStore();
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) {
-    return (
-      <div className="space-y-6 max-w-7xl mx-auto">
-        <div className="flex flex-col gap-4 border-b border-border pb-6">
-          <CardSkeleton />
-        </div>
-      </div>
-    );
-  }
 
   const goal = goals.find((g) => g.id === goalId);
 
@@ -168,5 +147,35 @@ export default function GoalDetailPage({ params }: GoalPageProps) {
         )}
       </div>
     </div>
+  );
+}
+
+export default function GoalDetailPage() {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return (
+      <div className="space-y-6 max-w-7xl mx-auto">
+        <div className="flex flex-col gap-4 border-b border-border pb-6">
+          <CardSkeleton />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <Suspense fallback={
+      <div className="space-y-6 max-w-7xl mx-auto">
+        <div className="flex flex-col gap-4 border-b border-border pb-6">
+          <CardSkeleton />
+        </div>
+      </div>
+    }>
+      <GoalDetailContent />
+    </Suspense>
   );
 }
