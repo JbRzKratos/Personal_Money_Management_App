@@ -63,13 +63,13 @@ export function TransactionFilters() {
 
   return (
     <div className="flex flex-col sm:flex-row gap-3">
-      <div className="relative flex-1 max-w-sm">
+      <div className="relative flex-1 sm:max-w-sm">
         <Input
           placeholder="Search notes..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && applyFilters()}
-          className="pr-8"
+          className="pr-8 h-11 sm:h-9"
         />
         {search && (
           <button
@@ -88,7 +88,7 @@ export function TransactionFilters() {
 
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline" className="gap-2">
+          <Button variant="outline" className="gap-2 h-11 sm:h-9">
             <SlidersHorizontal className="h-4 w-4" />
             Filters
             {hasActiveFilters && (

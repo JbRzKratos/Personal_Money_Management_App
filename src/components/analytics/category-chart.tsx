@@ -69,9 +69,9 @@ export function CategoryChart({ data, monthName, year }: CategoryChartProps) {
         <CardTitle className="text-base font-semibold">Expense Breakdown</CardTitle>
         <CardDescription>Where your money went in {monthName} {year}</CardDescription>
       </CardHeader>
-      <CardContent className="flex-1 min-h-[350px]">
-        <div className="h-full w-full">
-          <ResponsiveContainer width="100%" height="100%">
+      <CardContent className="flex-1">
+        <div className="h-[300px] lg:h-full w-full">
+          <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 100, height: 100 }}>
             <PieChart>
               <Pie
                 data={data}

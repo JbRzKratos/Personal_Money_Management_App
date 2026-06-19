@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
 import type { TransactionDisplay } from "@/types";
 import { Badge } from "@/components/ui/badge";
@@ -23,12 +22,109 @@ import {
 } from "@/components/ui/table";
 import { ArrowDownLeft, ArrowRight, ArrowUpRight, SearchX, Trash2, MoreVertical } from "lucide-react";
 import { EmptyState } from "@/components/shared/empty-state";
+import { useIsMobile } from "@/components/ui/responsive-modal";
 
 interface TransactionTableProps {
   transactions: TransactionDisplay[];
 }
 
+function TransactionDeleteAction({ id }: { id: string }) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-muted flex-shrink-0">
+          <MoreVertical className="h-4 w-4 text-muted-foreground" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem
+          className="text-destructive focus:text-destructive cursor-pointer"
+          onClick={() => {
+            useFinanceStore.getState().deleteTransaction(id);
+            toast.success("Transaction deleted successfully");
+          }}
+        >
+          <Trash2 className="h-4 w-4 mr-2" />
+          Delete
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+function MobileTransactionCard({ t }: { t: TransactionDisplay }) {
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case "INCOME":
+        return (
+          <div className="p-2 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-500 flex-shrink-0">
+            <ArrowDownLeft className="h-4 w-4" />
+          </div>
+        );
+      case "EXPENSE":
+        return (
+          <div className="p-2 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-500 flex-shrink-0">
+            <ArrowUpRight className="h-4 w-4" />
+          </div>
+        );
+      case "TRANSFER":
+        return (
+          <div className="p-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-500 flex-shrink-0">
+            <ArrowRight className="h-4 w-4" />
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="transaction-card-mobile">
+      {getTypeIcon(t.transactionType)}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-sm font-medium truncate">
+            {t.note || t.accountName}
+          </span>
+          <span
+            className={`font-semibold text-sm whitespace-nowrap ${
+              t.transactionType === "INCOME"
+                ? "text-green-600 dark:text-green-500"
+                : t.transactionType === "EXPENSE"
+                ? "text-foreground"
+                : "text-muted-foreground"
+            }`}
+          >
+            {t.transactionType === "INCOME" ? "+" : ""}
+            {t.transactionType === "EXPENSE" ? "-" : ""}
+            {formatCurrency(t.amount)}
+          </span>
+        </div>
+        <div className="flex items-center justify-between mt-0.5">
+          <span className="text-xs text-muted-foreground truncate">
+            {t.accountName}
+            <span className="mx-1">•</span>
+            {t.transactionType === "TRANSFER"
+              ? `${t.fromCategoryName} → ${t.toCategoryName}`
+              : t.transactionType === "INCOME"
+              ? t.toCategoryName
+              : t.fromCategoryName}
+          </span>
+          <span className="text-[10px] text-muted-foreground whitespace-nowrap ml-2">
+            {formatDateTime(t.transactionDate)}
+          </span>
+        </div>
+      </div>
+      {t.transactionType !== "INITIAL_BALANCE" && (
+        <TransactionDeleteAction id={t.id} />
+      )}
+    </div>
+  );
+}
+
 export function TransactionTable({ transactions }: TransactionTableProps) {
+  const isMobile = useIsMobile();
+
   if (transactions.length === 0) {
     return (
       <EmptyState
@@ -78,6 +174,18 @@ export function TransactionTable({ transactions }: TransactionTableProps) {
     }
   };
 
+  // Mobile: render as card list
+  if (isMobile) {
+    return (
+      <div className="space-y-2 mt-4">
+        {transactions.map((t) => (
+          <MobileTransactionCard key={t.id} t={t} />
+        ))}
+      </div>
+    );
+  }
+
+  // Desktop: render as table
   return (
     <div className="rounded-md border border-border bg-card overflow-hidden mt-6">
       <Table>
@@ -147,25 +255,7 @@ export function TransactionTable({ transactions }: TransactionTableProps) {
               </TableCell>
               <TableCell className="text-right">
                 {t.transactionType !== "INITIAL_BALANCE" && (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-muted">
-                        <MoreVertical className="h-4 w-4 text-muted-foreground" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem
-                        className="text-destructive focus:text-destructive cursor-pointer"
-                        onClick={() => {
-                          useFinanceStore.getState().deleteTransaction(t.id);
-                          toast.success("Transaction deleted successfully");
-                        }}
-                      >
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <TransactionDeleteAction id={t.id} />
                 )}
               </TableCell>
             </TableRow>

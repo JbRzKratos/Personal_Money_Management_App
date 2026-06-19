@@ -10,14 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { ResponsiveModal } from "@/components/ui/responsive-modal";
 import { Loader2, Target, CalendarIcon } from "lucide-react";
 import { toast } from "sonner";
 import type { SavingsGoalSerialized } from "@/types";
@@ -88,25 +81,21 @@ export function GoalForm({ open, onOpenChange, initialData }: GoalFormProps) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Target className="h-5 w-5 text-primary" />
-            {initialData ? "Edit Goal" : "Create New Goal"}
-          </DialogTitle>
-          <DialogDescription>
-            {initialData
-              ? "Update your savings goal details below."
-              : "Set a new savings target to track your progress."}
-          </DialogDescription>
-        </DialogHeader>
+    <ResponsiveModal
+      open={open}
+      onOpenChange={handleOpenChange}
+      title={initialData ? "Edit Goal" : "Create New Goal"}
+      description={initialData
+        ? "Update your savings goal details below."
+        : "Set a new savings target to track your progress."}
+    >
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-4">
           <div className="space-y-2">
             <Label htmlFor="goalName">Goal Name</Label>
             <Input
               id="goalName"
               placeholder="e.g. New Car Fund"
+              className="h-11 sm:h-9"
               {...register("goalName")}
             />
             {errors.goalName && (
@@ -116,7 +105,7 @@ export function GoalForm({ open, onOpenChange, initialData }: GoalFormProps) {
             )}
           </div>
           
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="space-y-2">
               <Label htmlFor="targetAmount">Target Amount</Label>
               <Input
@@ -125,6 +114,7 @@ export function GoalForm({ open, onOpenChange, initialData }: GoalFormProps) {
                 step="0.01"
                 min="1"
                 placeholder="0.00"
+                className="h-11 sm:h-9"
                 {...register("targetAmount", { valueAsNumber: true })}
               />
               {errors.targetAmount && (
@@ -141,6 +131,7 @@ export function GoalForm({ open, onOpenChange, initialData }: GoalFormProps) {
                 step="0.01"
                 min="0"
                 placeholder="0.00"
+                className="h-11 sm:h-9"
                 {...register("currentAmount", { valueAsNumber: true })}
               />
               {errors.currentAmount && (
@@ -176,22 +167,22 @@ export function GoalForm({ open, onOpenChange, initialData }: GoalFormProps) {
             />
           </div>
 
-          <DialogFooter className="pt-4">
+          <div className="flex flex-col-reverse sm:flex-row gap-2 sm:justify-end pt-4">
             <Button
               type="button"
               variant="outline"
               onClick={() => handleOpenChange(false)}
               disabled={isLoading}
+              className="h-11 sm:h-9"
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading} className="gradient-primary text-white">
+            <Button type="submit" disabled={isLoading} className="gradient-primary text-white h-11 sm:h-9">
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {initialData ? "Save Changes" : "Create Goal"}
             </Button>
-          </DialogFooter>
+          </div>
         </form>
-      </DialogContent>
-    </Dialog>
+    </ResponsiveModal>
   );
 }

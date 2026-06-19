@@ -29,11 +29,11 @@ function DashboardOverview() {
 
   if (!isMounted) {
     return (
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="space-y-4 sm:space-y-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <CardSkeleton /><CardSkeleton /><CardSkeleton /><CardSkeleton />
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           <div className="lg:col-span-2"><CardSkeleton /></div>
           <CardSkeleton />
         </div>
@@ -42,17 +42,17 @@ function DashboardOverview() {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-4 sm:space-y-6 animate-fade-in">
       <StatsCards stats={stats} />
 
       {insights.length > 0 && (
-        <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 flex items-start gap-3">
+        <div className="bg-primary/5 border border-primary/20 rounded-xl p-3 sm:p-4 flex items-start gap-2 sm:gap-3">
           <div className="p-2 bg-primary/10 rounded-full text-primary mt-0.5">
             <Sparkles className="h-5 w-5" />
           </div>
           <div className="space-y-1">
             <h4 className="font-semibold text-sm">Financial Insights</h4>
-            <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
+            <div className="flex flex-wrap gap-x-4 sm:gap-x-6 gap-y-2 text-xs sm:text-sm text-muted-foreground">
               {insights.map((insight) => {
                 const getIcon = () => {
                   switch (insight.icon) {
@@ -76,15 +76,15 @@ function DashboardOverview() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         <BalanceChart data={balanceChartData} />
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4 sm:gap-6">
           <QuickTransfer />
           <RecentTransactions transactions={recentTransactions} />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <IncomeExpenseChart data={chartData} />
       </div>
     </div>
@@ -93,11 +93,11 @@ function DashboardOverview() {
 
 export default function DashboardPage() {
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="space-y-4 sm:space-y-6 max-w-7xl mx-auto">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground mt-1">
+          <h1 className="page-title">Dashboard</h1>
+          <p className="text-sm sm:text-base text-muted-foreground mt-0.5 sm:mt-1">
             Here&apos;s an overview of your financial health.
           </p>
         </div>

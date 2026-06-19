@@ -101,15 +101,15 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto animate-fade-in">
+    <div className="space-y-4 sm:space-y-6 max-w-4xl mx-auto animate-fade-in">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-        <p className="text-muted-foreground mt-1">
+        <h1 className="page-title">Settings</h1>
+        <p className="text-sm sm:text-base text-muted-foreground mt-0.5 sm:mt-1">
           Manage your app preferences and data backups.
         </p>
       </div>
 
-      <div className="grid gap-6">
+      <div className="grid gap-4 sm:gap-6">
         {/* Preferences */}
         <Card>
           <CardHeader>

@@ -51,7 +51,7 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <main className="flex-1 flex flex-col items-center justify-center w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32 z-10">
+      <main className="flex-1 flex flex-col items-center justify-center w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-20 pb-16 sm:pb-32 z-10">
         <motion.div 
           className="text-center max-w-3xl space-y-8"
           variants={containerVariants}
@@ -63,14 +63,14 @@ export default function LandingPage() {
             <span>The smart way to manage your money locally</span>
           </motion.div>
           
-          <motion.h1 variants={itemVariants} className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-foreground leading-[1.1]">
+          <motion.h1 variants={itemVariants} className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground leading-[1.1]">
             Take Control of Your <br className="hidden sm:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">
               Financial Future
             </span>
           </motion.h1>
           
-          <motion.p variants={itemVariants} className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          <motion.p variants={itemVariants} className="text-base sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Track your expenses, set intelligent savings goals, and gain crystal-clear insights into your spending habits with our secure, offline-first dashboard.
           </motion.p>
           
@@ -87,13 +87,13 @@ export default function LandingPage() {
 
         {/* Features Grid */}
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-32 w-full"
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-8 mt-16 sm:mt-32 w-full"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
-          <motion.div variants={itemVariants} className="bg-card border border-border rounded-2xl p-6 shadow-sm flex flex-col items-center text-center gap-4 hover:shadow-md transition-shadow">
+          <motion.div variants={itemVariants} className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-sm flex flex-col items-center text-center gap-3 sm:gap-4 hover:shadow-md transition-shadow">
             <div className="h-12 w-12 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center">
               <PieChart className="h-6 w-6" />
             </div>
@@ -103,7 +103,7 @@ export default function LandingPage() {
             </p>
           </motion.div>
           
-          <motion.div variants={itemVariants} className="bg-card border border-border rounded-2xl p-6 shadow-sm flex flex-col items-center text-center gap-4 hover:shadow-md transition-shadow">
+          <motion.div variants={itemVariants} className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-sm flex flex-col items-center text-center gap-3 sm:gap-4 hover:shadow-md transition-shadow">
             <div className="h-12 w-12 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
               <Wallet className="h-6 w-6" />
             </div>
@@ -113,7 +113,7 @@ export default function LandingPage() {
             </p>
           </motion.div>
 
-          <motion.div variants={itemVariants} className="bg-card border border-border rounded-2xl p-6 shadow-sm flex flex-col items-center text-center gap-4 hover:shadow-md transition-shadow">
+          <motion.div variants={itemVariants} className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-sm flex flex-col items-center text-center gap-3 sm:gap-4 hover:shadow-md transition-shadow sm:col-span-2 md:col-span-1">
             <div className="h-12 w-12 rounded-full bg-purple-500/10 text-purple-500 flex items-center justify-center">
               <Shield className="h-6 w-6" />
             </div>

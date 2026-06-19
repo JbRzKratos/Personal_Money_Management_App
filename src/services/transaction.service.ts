@@ -25,13 +25,20 @@ export const TransactionService = {
   ): { accounts: BankAccountSerialized[]; transactions: TransactionSerialized[] } {
     const now = new Date().toISOString();
 
-    const newTransaction: TransactionSerialized = {
+    // Ensure amount is parsed as a number to prevent string concatenation bugs
+    const parsedAmount = typeof payload.amount === "string" ? parseFloat(payload.amount) : payload.amount;
+    const cleanPayload = {
       ...payload,
+      amount: isNaN(parsedAmount) ? 0 : parsedAmount,
+    };
+
+    const newTransaction: TransactionSerialized = {
+      ...cleanPayload,
       id: uuidv4(),
       createdAt: now,
     };
 
-    const updatedAccounts = this.applyBalanceChange(accounts, payload, "apply");
+    const updatedAccounts = this.applyBalanceChange(accounts, cleanPayload, "apply");
 
     return {
       accounts: updatedAccounts,

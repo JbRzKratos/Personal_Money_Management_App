@@ -360,26 +360,8 @@ body {
 .stagger-children > *:nth-child(7) { animation-delay: 0.35s; }
 .stagger-children > *:nth-child(8) { animation-delay: 0.4s; }
 
-/* ============================================ */
-/* Component utilities                           */
-/* ============================================ */
+/* Component utilities are defined in the Mobile-First section below */
 
-.stat-card {
-  @apply relative overflow-hidden rounded-xl p-6 transition-all duration-300;
-}
-
-.stat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
-}
-
-.dark .stat-card:hover {
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-}
-
-.progress-ring {
-  transition: stroke-dashoffset 0.6s ease-in-out;
-}
 
 /* ============================================ */
 /* Auth page background                          */
@@ -416,3 +398,159 @@ body {
     radial-gradient(ellipse at 60% 80%, hsla(280, 67%, 57%, 0.05) 0%, transparent 60%);
   pointer-events: none;
 }
+
+/* ============================================ */
+/* Mobile-First Responsive Foundations          */
+/* ============================================ */
+
+/* Safe area insets for notched devices (iPhone X+) */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.safe-area-left {
+  padding-left: env(safe-area-inset-left, 0px);
+}
+
+.safe-area-right {
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+/* Minimum touch target size (44px per Apple/Google guidelines) */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Mobile-optimized scrollbar (hide on touch, show on pointer) */
+@media (hover: none) and (pointer: coarse) {
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  /* Disable hover-based transforms on touch devices */
+  .stat-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .dark .stat-card:hover {
+    box-shadow: none;
+  }
+}
+
+/* Responsive stat-card */
+.stat-card {
+  @apply relative overflow-hidden rounded-xl transition-all duration-300;
+  padding: 1rem;
+}
+
+@media (min-width: 640px) {
+  .stat-card {
+    padding: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .stat-card {
+    padding: 1.5rem;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  .dark .stat-card:hover {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Page title responsive sizing */
+.page-title {
+  @apply font-bold tracking-tight;
+  font-size: 1.5rem; /* 24px base */
+  line-height: 1.2;
+}
+
+@media (min-width: 640px) {
+  .page-title {
+    font-size: 1.875rem; /* 30px */
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-title {
+    font-size: 2.25rem; /* 36px - was text-3xl before */
+  }
+}
+
+/* Bottom nav clearance for main content */
+.main-content-mobile {
+  padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+}
+
+@media (min-width: 1024px) {
+  .main-content-mobile {
+    padding-bottom: 1.5rem;
+  }
+}
+
+/* Prevent iOS zoom on input focus by ensuring font-size >= 16px */
+@media screen and (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Mobile-friendly card content spacing */
+@media (max-width: 639px) {
+  [data-slot="card-content"] {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* FAB (Floating Action Button) styles */
+.fab {
+  position: fixed;
+  z-index: 40;
+  bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
+  right: 1rem;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.fab:active {
+  transform: scale(0.92);
+}
+
+@media (min-width: 1024px) {
+  .fab {
+    display: none;
+  }
+}
+
+/* Mobile transaction card */
+.transaction-card-mobile {
+  @apply flex items-center gap-3 p-3 rounded-xl bg-card border border-border;
+  transition: background-color 0.15s ease;
+}
+
+.transaction-card-mobile:active {
+  background-color: hsl(var(--muted));
+}
+

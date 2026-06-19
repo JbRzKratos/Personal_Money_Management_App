@@ -23,12 +23,12 @@ function AnalyticsContent() {
 
   if (!isMounted) {
     return (
-      <div className="space-y-6 max-w-7xl mx-auto">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
-          <div className="md:col-span-1 lg:col-span-4 h-[400px]">
+      <div className="space-y-4 sm:space-y-6 max-w-7xl mx-auto">
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-7">
+          <div className="lg:col-span-4 h-fit lg:h-[400px]">
             <CardSkeleton />
           </div>
-          <div className="md:col-span-1 lg:col-span-3 h-[400px]">
+          <div className="lg:col-span-3 h-fit lg:h-[400px]">
             <CardSkeleton />
           </div>
         </div>
@@ -37,11 +37,11 @@ function AnalyticsContent() {
   }
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto animate-fade-in">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="space-y-4 sm:space-y-6 max-w-7xl mx-auto animate-fade-in">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
-          <p className="text-muted-foreground mt-1">
+          <h1 className="page-title">Analytics</h1>
+          <p className="text-sm sm:text-base text-muted-foreground mt-0.5 sm:mt-1">
             Deep dive into your financial trends and habits.
           </p>
         </div>
@@ -49,11 +49,11 @@ function AnalyticsContent() {
         <AnalyticsFilters />
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
-        <div className="md:col-span-1 lg:col-span-4 h-[400px]">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-7">
+        <div className="lg:col-span-4 h-fit lg:h-[400px]">
           <IncomeExpenseChart data={monthlyTrendData} />
         </div>
-        <div className="md:col-span-1 lg:col-span-3 h-[400px]">
+        <div className="lg:col-span-3 h-fit lg:h-[400px]">
           <CategoryChart 
             data={categoryData} 
             monthName={getMonthName(month)} 
@@ -68,12 +68,12 @@ function AnalyticsContent() {
 export default function AnalyticsPage() {
   return (
     <Suspense fallback={
-      <div className="space-y-6 max-w-7xl mx-auto">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
-          <div className="md:col-span-1 lg:col-span-4 h-[400px]">
+      <div className="space-y-4 sm:space-y-6 max-w-7xl mx-auto">
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-7">
+          <div className="lg:col-span-4 h-fit lg:h-[400px]">
             <CardSkeleton />
           </div>
-          <div className="md:col-span-1 lg:col-span-3 h-[400px]">
+          <div className="lg:col-span-3 h-fit lg:h-[400px]">
             <CardSkeleton />
           </div>
         </div>

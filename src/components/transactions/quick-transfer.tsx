@@ -43,6 +43,8 @@ export function QuickTransfer() {
     defaultValues: {
       transactionDate: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
       note: "Quick Transfer",
+      fromCategoryId: "",
+      toCategoryId: "",
     },
   });
 

@@ -44,15 +44,15 @@ function TransactionList() {
 
 export default function TransactionsPage() {
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
+    <div className="space-y-4 sm:space-y-6 max-w-7xl mx-auto">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Transactions</h1>
-        <p className="text-muted-foreground mt-1">
+        <h1 className="page-title">Transactions</h1>
+        <p className="text-sm sm:text-base text-muted-foreground mt-0.5 sm:mt-1">
           View and filter your complete transaction history.
         </p>
       </div>
 
-      <div className="bg-card border border-border p-4 rounded-xl shadow-sm">
+      <div className="bg-card border border-border p-3 sm:p-4 rounded-xl shadow-sm">
         <Suspense fallback={<div>Loading filters...</div>}>
           <TransactionFilters />
         </Suspense>

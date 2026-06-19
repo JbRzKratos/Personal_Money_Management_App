@@ -19,7 +19,7 @@ function AccountsList() {
 
   if (!isMounted) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6">
         <CardSkeleton />
         <CardSkeleton />
         <CardSkeleton />
@@ -43,7 +43,7 @@ function AccountsList() {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 animate-fade-in stagger-children">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6 animate-fade-in stagger-children">
       {accounts.map((account) => (
         <AccountCard key={account.id} account={account} />
       ))}
@@ -53,11 +53,11 @@ function AccountsList() {
 
 export default function AccountsPage() {
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="space-y-4 sm:space-y-6 max-w-7xl mx-auto">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Bank Accounts</h1>
-          <p className="text-muted-foreground mt-1">
+          <h1 className="page-title">Bank Accounts</h1>
+          <p className="text-sm sm:text-base text-muted-foreground mt-0.5 sm:mt-1">
             Manage your bank accounts, wallets, and cash balances.
           </p>
         </div>

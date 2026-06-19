@@ -26,13 +26,13 @@ export function BalanceChart({ data }: BalanceChartProps) {
   const gridColor = isDark ? "#27272a" : "#e4e4e7";
 
   return (
-    <Card className="border border-border col-span-1 lg:col-span-2">
+    <Card className="border border-border col-span-1 lg:col-span-2 h-full flex flex-col">
       <CardHeader>
         <CardTitle className="text-base font-semibold">Total Balance Trend</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="h-[300px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
+      <CardContent className="flex-1">
+        <div className="h-[300px] lg:h-full w-full">
+          <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 100, height: 100 }}>
             <AreaChart
               data={data}
               margin={{ top: 10, right: 10, left: -20, bottom: 0 }}

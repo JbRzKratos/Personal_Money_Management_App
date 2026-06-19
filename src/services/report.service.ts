@@ -41,12 +41,14 @@ export const ReportService = {
       if (isAfter(tDate, currentMonthStart) || tDate.getTime() === currentMonthStart.getTime()) {
         if (t.transactionType === "INCOME") currentMonthlyIncome += t.amount;
         if (t.transactionType === "EXPENSE") currentMonthlyExpenses += t.amount;
+        if (t.transactionType === "TRANSFER" && t.toCategoryId === null) currentMonthlyIncome -= t.amount;
       } else if (
         (isAfter(tDate, lastMonthStart) || tDate.getTime() === lastMonthStart.getTime()) &&
         isBefore(tDate, currentMonthStart)
       ) {
         if (t.transactionType === "INCOME") lastMonthlyIncome += t.amount;
         if (t.transactionType === "EXPENSE") lastMonthlyExpenses += t.amount;
+        if (t.transactionType === "TRANSFER" && t.toCategoryId === null) lastMonthlyIncome -= t.amount;
       }
     });
 
@@ -90,6 +92,7 @@ export const ReportService = {
         ) {
           if (t.transactionType === "INCOME") income += t.amount;
           if (t.transactionType === "EXPENSE") expenses += t.amount;
+          if (t.transactionType === "TRANSFER" && t.toCategoryId === null) income -= t.amount;
         }
       });
 
@@ -198,8 +201,11 @@ export const ReportService = {
     transactions.forEach((t) => {
       const tDate = new Date(t.transactionDate);
       if (tDate.getMonth() + 1 === month && tDate.getFullYear() === year) {
-        if (t.transactionType === "INCOME") income += t.amount;
-        else if (t.transactionType === "EXPENSE") expenses += t.amount;
+        const amt = typeof t.amount === "string" ? parseFloat(t.amount) : t.amount;
+        if (!isNaN(amt)) {
+          if (t.transactionType === "INCOME") income += amt;
+          else if (t.transactionType === "EXPENSE") expenses += amt;
+        }
       }
     });
 
@@ -207,9 +213,9 @@ export const ReportService = {
       id: uuidv4(),
       month,
       year,
-      income,
-      expenses,
-      savings: income - expenses,
+      income: Math.round(income * 100) / 100,
+      expenses: Math.round(expenses * 100) / 100,
+      savings: Math.round((income - expenses) * 100) / 100,
       createdAt: new Date().toISOString(),
     };
   },

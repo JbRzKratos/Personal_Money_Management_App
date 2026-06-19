@@ -5,14 +5,7 @@ import { useFinanceStore } from "@/stores/finance-store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { ResponsiveModal } from "@/components/ui/responsive-modal";
 import {
   Select,
   SelectContent,
@@ -108,9 +101,9 @@ export function AddMoneyModal({
         ? goal.goalName
         : "Savings Goal";
 
-      // 1. Log the Expense Transaction to deduct the amount from category
+      // 1. Log the Transfer Transaction to deduct the amount from category without counting as an expense
       addTransaction({
-        transactionType: "EXPENSE",
+        transactionType: "TRANSFER",
         amount: numAmount,
         transactionDate: new Date().toISOString(),
         note: `Savings allocation for "${displayName}"`,
@@ -169,17 +162,12 @@ export function AddMoneyModal({
     : "Goal";
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <PlusCircle className="h-5 w-5 text-primary" />
-            Add Money to {displayName}
-          </DialogTitle>
-          <DialogDescription>
-            Select a source category to allocate money from. The amount will be deducted from your account.
-          </DialogDescription>
-        </DialogHeader>
+    <ResponsiveModal
+      open={open}
+      onOpenChange={onOpenChange}
+      title={`Add Money to ${displayName}`}
+      description="Select a source category to allocate money from. The amount will be deducted from your account."
+    >
 
         <form onSubmit={handleSubmit} className="space-y-4 pt-4">
           {/* Category Dropdown (Required) */}
@@ -189,7 +177,7 @@ export function AddMoneyModal({
               value={selectedCategoryId}
               onValueChange={setSelectedCategoryId}
             >
-              <SelectTrigger>
+              <SelectTrigger className="h-11 sm:h-9">
                 <SelectValue placeholder="Select category to deduct from" />
               </SelectTrigger>
               <SelectContent>
@@ -218,7 +206,7 @@ export function AddMoneyModal({
                 value={selectedSubGoalId}
                 onValueChange={setSelectedSubGoalId}
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-11 sm:h-9">
                   <SelectValue placeholder="Choose a milestone" />
                 </SelectTrigger>
                 <SelectContent>
@@ -242,7 +230,7 @@ export function AddMoneyModal({
                 step="0.01"
                 min="0.01"
                 placeholder="0.00"
-                className="pl-7"
+                className="pl-7 h-11 sm:h-9"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 autoFocus
@@ -250,22 +238,22 @@ export function AddMoneyModal({
             </div>
           </div>
 
-          <DialogFooter className="pt-4">
+          <div className="flex flex-col-reverse sm:flex-row gap-2 sm:justify-end pt-4">
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
               disabled={isLoading}
+              className="h-11 sm:h-9"
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading} className="gradient-primary text-white">
+            <Button type="submit" disabled={isLoading} className="gradient-primary text-white h-11 sm:h-9">
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Allocate Funds
             </Button>
-          </DialogFooter>
+          </div>
         </form>
-      </DialogContent>
-    </Dialog>
+    </ResponsiveModal>
   );
 }

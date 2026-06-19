@@ -74,7 +74,7 @@ export function StatsCards({ stats }: StatsCardsProps) {
   ];
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 animate-fade-in stagger-children">
+    <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4 animate-fade-in stagger-children">
       {cards.map((card, i) => (
         <Card key={i} className="stat-card">
           <CardContent className="p-0">
@@ -87,7 +87,7 @@ export function StatsCards({ stats }: StatsCardsProps) {
               </div>
             </div>
             <div className="space-y-1">
-              <p className="text-2xl font-bold tracking-tight">
+              <p className="text-lg sm:text-xl lg:text-2xl font-bold tracking-tight">
                 {formatCurrency(card.amount)}
               </p>
               {card.change !== null && (

@@ -10,12 +10,12 @@ export default function DashboardLayout({
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
-      <div className="flex-1 flex flex-col min-h-screen">
+      <div className="flex-1 flex flex-col min-h-screen min-w-0">
         <Header
           userName="Local User"
           userEmail="offline@local.dev"
         />
-        <main className="flex-1 p-4 lg:p-6 pb-20 lg:pb-6">
+        <main className="flex-1 p-3 sm:p-4 lg:p-6 main-content-mobile">
           {children}
         </main>
       </div>
@@ -23,3 +23,4 @@ export default function DashboardLayout({
     </div>
   );
 }
+

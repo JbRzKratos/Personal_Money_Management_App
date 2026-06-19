@@ -89,7 +89,7 @@ export function AccountCard({ account }: AccountCardProps) {
 
           <div className="mb-4">
             <p className="text-sm text-muted-foreground mb-1">Total Balance</p>
-            <p className="text-2xl font-bold tracking-tight">
+            <p className="text-xl sm:text-2xl font-bold tracking-tight">
               {formatCurrency(account.totalBalance)}
             </p>
           </div>

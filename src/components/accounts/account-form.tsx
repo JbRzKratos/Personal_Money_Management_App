@@ -6,14 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { BankAccountSerialized } from "@/types";
 import { useFinanceStore } from "@/stores/finance-store";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { ResponsiveModal } from "@/components/ui/responsive-modal";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -102,18 +95,14 @@ export function AccountForm({
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>
-            {isEditing ? "Edit Account" : "Create New Account"}
-          </DialogTitle>
-          <DialogDescription>
-            {isEditing
-              ? "Update your bank account details below."
-              : "Add a new bank account or wallet to track your finances."}
-          </DialogDescription>
-        </DialogHeader>
+    <ResponsiveModal
+      open={open}
+      onOpenChange={handleOpenChange}
+      title={isEditing ? "Edit Account" : "Create New Account"}
+      description={isEditing
+        ? "Update your bank account details below."
+        : "Add a new bank account or wallet to track your finances."}
+    >
 
         {isEditing ? (
           <form onSubmit={editForm.handleSubmit(onEditSubmit)} className="space-y-4 pt-4">
@@ -122,6 +111,7 @@ export function AccountForm({
               <Input
                 id="accountName"
                 placeholder="e.g. HDFC Checking"
+                className="h-11 sm:h-9"
                 {...editForm.register("accountName")}
               />
               {editForm.formState.errors.accountName && (
@@ -144,20 +134,21 @@ export function AccountForm({
                 </p>
               )}
             </div>
-            <DialogFooter className="pt-4">
+            <div className="flex flex-col-reverse sm:flex-row gap-2 sm:justify-end pt-4">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => handleOpenChange(false)}
                 disabled={isLoading}
+                className="h-11 sm:h-9"
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isLoading} className="gradient-primary text-white">
+              <Button type="submit" disabled={isLoading} className="gradient-primary text-white h-11 sm:h-9">
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Save Changes
               </Button>
-            </DialogFooter>
+            </div>
           </form>
         ) : (
           <form onSubmit={createForm.handleSubmit(onCreateSubmit)} className="space-y-4 pt-4">
@@ -166,6 +157,7 @@ export function AccountForm({
               <Input
                 id="accountName"
                 placeholder="e.g. HDFC Checking"
+                className="h-11 sm:h-9"
                 {...createForm.register("accountName")}
               />
               {createForm.formState.errors.accountName && (
@@ -198,7 +190,7 @@ export function AccountForm({
                   step="0.01"
                   min="0"
                   placeholder="0.00"
-                  className="pl-10"
+                  className="pl-10 h-11 sm:h-9"
                   {...createForm.register("initialBalance", { valueAsNumber: true })}
                 />
               </div>
@@ -211,23 +203,23 @@ export function AccountForm({
                 This sets your starting account balance. It will automatically create a default "General" category with this amount.
               </p>
             </div>
-            <DialogFooter className="pt-4">
+            <div className="flex flex-col-reverse sm:flex-row gap-2 sm:justify-end pt-4">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => handleOpenChange(false)}
                 disabled={isLoading}
+                className="h-11 sm:h-9"
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isLoading} className="gradient-primary text-white">
+              <Button type="submit" disabled={isLoading} className="gradient-primary text-white h-11 sm:h-9">
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Create Account
               </Button>
-            </DialogFooter>
+            </div>
           </form>
         )}
-      </DialogContent>
-    </Dialog>
+    </ResponsiveModal>
   );
 }
