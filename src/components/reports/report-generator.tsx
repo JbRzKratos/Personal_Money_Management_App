@@ -55,7 +55,7 @@ export function ReportGenerator() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gradient-primary text-white shadow-md shadow-primary/25">
+        <Button>
           <Plus className="mr-2 h-4 w-4" />
           Generate Report
         </Button>

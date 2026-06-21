@@ -7,7 +7,10 @@ import { AnalyticsFilters } from "@/components/analytics/analytics-filters";
 import { CardSkeleton } from "@/components/shared/loading-skeleton";
 import { getMonthName } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
-import { useMounted, useChartData } from "@/hooks";
+import { useMounted, useDashboardStats } from "@/hooks";
+import { useFinanceStore } from "@/stores/finance-store";
+import { ReportService } from "@/services/report.service";
+import { useMemo } from "react";
 
 function AnalyticsContent() {
   const isMounted = useMounted();
@@ -19,7 +22,13 @@ function AnalyticsContent() {
   const month = monthParam ? parseInt(monthParam) : today.getMonth() + 1;
   const year = yearParam ? parseInt(yearParam) : today.getFullYear();
 
-  const { categoryData, monthlyTrendData } = useChartData(month, year);
+  const { chartData: monthlyTrendData } = useDashboardStats();
+  const transactions = useFinanceStore((s) => s.transactions);
+  const accounts = useFinanceStore((s) => s.accounts);
+  const categoryData = useMemo(
+    () => ReportService.computeCategoryAnalytics(transactions, accounts, month, year),
+    [transactions, accounts, month, year]
+  );
 
   if (!isMounted) {
     return (

@@ -47,7 +47,8 @@ export function TransactionForm({
     defaultType
   );
   
-  const { accounts, addTransaction } = useFinanceStore();
+  const accounts = useFinanceStore((s) => s.accounts);
+  const addTransaction = useFinanceStore((s) => s.addTransaction);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Transfer Form
@@ -407,7 +408,7 @@ export function TransactionForm({
 
                 <Button
                   type="submit"
-                  className="w-full h-11 sm:h-9 gradient-primary text-white"
+                  className="w-full h-11 sm:h-9"
                   disabled={isSubmitting}
                 >
                   {isSubmitting && (

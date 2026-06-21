@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useFinanceStore } from "@/stores/finance-store";
 import { TransactionService } from "@/services/transaction.service";
 import { DEFAULT_PAGE_SIZE } from "@/constants";
-import type { TransactionDisplay, TransactionFilters } from "@/types";
+import type { TransactionDisplay, TransactionFilters, TransactionSerialized } from "@/types";
 
 interface UseFilteredTransactionsResult {
   transactions: TransactionDisplay[];
@@ -24,8 +24,8 @@ export function useFilteredTransactions(
   const { search, transactionType, accountId, dateFrom, dateTo, page = 1, pageSize = DEFAULT_PAGE_SIZE } = filters;
 
   const enrichedAndFiltered = useMemo(() => {
-    // First filter raw transactions
-    let filtered = [...rawTransactions];
+    // Filter lazily — no upfront array copy
+    let filtered = rawTransactions as TransactionSerialized[];
 
     if (accountId) {
       filtered = filtered.filter((t) => t.accountId === accountId);
@@ -33,15 +33,6 @@ export function useFilteredTransactions(
 
     if (transactionType && transactionType !== "ALL") {
       filtered = filtered.filter((t) => t.transactionType === transactionType);
-    }
-
-    if (search) {
-      const lowerSearch = search.toLowerCase();
-      filtered = filtered.filter(
-        (t) =>
-          (t.note && t.note.toLowerCase().includes(lowerSearch)) ||
-          t.amount.toString().includes(lowerSearch)
-      );
     }
 
     if (dateFrom) {
@@ -55,15 +46,25 @@ export function useFilteredTransactions(
       filtered = filtered.filter((t) => new Date(t.transactionDate) <= toDate);
     }
 
+    if (search) {
+      const lowerSearch = search.toLowerCase();
+      filtered = filtered.filter(
+        (t) =>
+          (t.note && t.note.toLowerCase().includes(lowerSearch)) ||
+          t.amount.toString().includes(lowerSearch)
+      );
+    }
+
     // Sort by date descending
-    filtered.sort(
+    const sorted = [...filtered].sort(
       (a, b) =>
         new Date(b.transactionDate).getTime() - new Date(a.transactionDate).getTime()
     );
 
     // Enrich with display names
-    return TransactionService.enrichTransactions(filtered, accounts);
+    return TransactionService.enrichTransactions(sorted, accounts);
   }, [rawTransactions, accounts, accountId, transactionType, search, dateFrom, dateTo]);
+
 
   const totalItems = enrichedAndFiltered.length;
   const totalPages = Math.ceil(totalItems / pageSize) || 1;

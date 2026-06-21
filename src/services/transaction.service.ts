@@ -128,53 +128,41 @@ export const TransactionService = {
 
   /**
    * Enrich raw transactions with human-readable account/category names.
+   * Pre-builds a flat Map for O(1) lookups instead of nested O(n×m) .find() calls.
    * This is a display-only transformation — never stored.
    */
   enrichTransactions(
     transactions: TransactionSerialized[],
     accounts: BankAccountSerialized[]
   ): TransactionDisplay[] {
-    return transactions.map((t) => {
-      let accountName = "Unknown Account";
-      let fromCategoryName: string | null = null;
-      let toCategoryName: string | null = null;
-
-      if (t.accountId) {
-        const acc = accounts.find((a) => a.id === t.accountId);
-        if (acc) {
-          accountName = acc.accountName;
-          if (t.fromCategoryId) {
-            const cat = acc.categories.find((c) => c.id === t.fromCategoryId);
-            if (cat) fromCategoryName = cat.categoryName;
-          }
-          if (t.toCategoryId) {
-            const cat = acc.categories.find((c) => c.id === t.toCategoryId);
-            if (cat) toCategoryName = cat.categoryName;
-          }
-        }
+    // Build flat lookup map once: categoryId → { accountName, categoryName }
+    const categoryMap = new Map<string, { accountName: string; categoryName: string }>();
+    for (const acc of accounts) {
+      for (const cat of acc.categories) {
+        categoryMap.set(cat.id, { accountName: acc.accountName, categoryName: cat.categoryName });
       }
+    }
+    // Build account name map: accountId → accountName
+    const accountMap = new Map<string, string>(accounts.map((a) => [a.id, a.accountName]));
 
-      // For transfers, categories may be in different accounts
-      if (t.transactionType === TRANSACTION_TYPES.TRANSFER) {
-        if (!t.accountId) accountName = "Transfer";
-        accounts.forEach((acc) => {
-          if (!fromCategoryName && t.fromCategoryId) {
-            const cat = acc.categories.find((c) => c.id === t.fromCategoryId);
-            if (cat) fromCategoryName = cat.categoryName;
-          }
-          if (!toCategoryName && t.toCategoryId) {
-            const cat = acc.categories.find((c) => c.id === t.toCategoryId);
-            if (cat) toCategoryName = cat.categoryName;
-          }
-        });
+    return transactions.map((t) => {
+      const fromInfo = t.fromCategoryId ? categoryMap.get(t.fromCategoryId) : undefined;
+      const toInfo = t.toCategoryId ? categoryMap.get(t.toCategoryId) : undefined;
+
+      let accountName = "Unknown Account";
+      if (t.accountId) {
+        accountName = accountMap.get(t.accountId) ?? "Unknown Account";
+      } else if (t.transactionType === TRANSACTION_TYPES.TRANSFER) {
+        accountName = fromInfo?.accountName ?? toInfo?.accountName ?? "Transfer";
       }
 
       return {
         ...t,
         accountName,
-        fromCategoryName,
-        toCategoryName,
+        fromCategoryName: fromInfo?.categoryName ?? null,
+        toCategoryName: toInfo?.categoryName ?? null,
       };
     });
   },
+
 };

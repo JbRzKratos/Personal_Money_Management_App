@@ -74,32 +74,30 @@ export const ReportService = {
 
   computeMonthlyChartData(transactions: TransactionSerialized[]): MonthlyChartData[] {
     const now = new Date();
-    const data: MonthlyChartData[] = [];
-
+    // Build the 6 month buckets we care about
+    const buckets = new Map<string, { label: string; income: number; expenses: number }>();
     for (let i = 5; i >= 0; i--) {
-      const monthStart = startOfMonth(subMonths(now, i));
-      const monthName = format(monthStart, "MMM yyyy");
-      const nextMonthStart = i === 0 ? new Date() : startOfMonth(subMonths(now, i - 1));
-
-      let income = 0;
-      let expenses = 0;
-
-      transactions.forEach((t) => {
-        const tDate = new Date(t.transactionDate);
-        if (
-          (isAfter(tDate, monthStart) || tDate.getTime() === monthStart.getTime()) &&
-          isBefore(tDate, nextMonthStart)
-        ) {
-          if (t.transactionType === "INCOME") income += t.amount;
-          if (t.transactionType === "EXPENSE") expenses += t.amount;
-          if (t.transactionType === "TRANSFER" && t.toCategoryId === null) income -= t.amount;
-        }
-      });
-
-      data.push({ month: monthName, income, expenses, savings: income - expenses });
+      const key = format(startOfMonth(subMonths(now, i)), "yyyy-MM");
+      const label = format(startOfMonth(subMonths(now, i)), "MMM yyyy");
+      buckets.set(key, { label, income: 0, expenses: 0 });
     }
 
-    return data;
+    // Single pass — O(n) instead of O(6n)
+    for (const t of transactions) {
+      const key = t.transactionDate.slice(0, 7); // "yyyy-MM"
+      const bucket = buckets.get(key);
+      if (!bucket) continue;
+      if (t.transactionType === "INCOME") bucket.income += t.amount;
+      else if (t.transactionType === "EXPENSE") bucket.expenses += t.amount;
+      else if (t.transactionType === "TRANSFER" && t.toCategoryId === null) bucket.income -= t.amount;
+    }
+
+    return Array.from(buckets.values()).map((b) => ({
+      month: b.label,
+      income: b.income,
+      expenses: b.expenses,
+      savings: b.income - b.expenses,
+    }));
   },
 
   computeInsights(stats: DashboardStats): FinancialInsight[] {
